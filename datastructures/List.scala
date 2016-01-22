@@ -30,12 +30,21 @@ object List {
     case Cons(_, xs) => Cons(rh, xs)
   }
 
-  def drop[A](l: List[A], n: Int): List[A] = {
-    def loop(n: Int, l: List[A]): List[A] =
-      if (n <= 0) l
-      else loop(n-1, tail(l))
+  def drop[A](l: List[A], n: Int): List[A] = l match {
+    case Nil => sys.error("drop on empty list")
+    case Cons(_,t) => if (n <= 1 ) t else drop(t, n-1)
+  }
 
-    loop(n, l)
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
+    l match {
+      case Cons(h,t) if !f(h) => dropWhile(t, f)
+      case _ => l
+    }
+
+  def init[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, Nil) => Nil
+    case Cons(h, t) => Cons(h, init(t))
   }
 
   val x = List(1,2,3,4,5) match {
