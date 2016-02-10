@@ -37,7 +37,13 @@ object List {
 
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match {
-      case Cons(h,t) if !f(h) => dropWhile(t, f)
+      case Cons(h,t) if f(h) => dropWhile(t, f)
+      case _ => l
+    }
+
+  def dropWhileCurry[A](l: List[A])(f: A => Boolean): List[A] =
+    l match {
+      case Cons(h,t) if f(h) => dropWhileCurry(t)(f)
       case _ => l
     }
 
@@ -46,6 +52,27 @@ object List {
     case Cons(_, Nil) => Nil
     case Cons(h, t) => Cons(h, init(t))
   }
+
+  def foldRight[A,B](as: List[A], z:B)(f: (A,B) => B):B =
+    as match {
+      case Nil => z
+      case Cons(x,xs) => f(x, foldRight(xs,z)(f))
+  }
+
+  def sum2(ns: List[Int]) =
+    foldRight(ns, 0)((x,y) => x + y)
+
+  def product2(ns: List[Double]) =
+    foldRight(ns, 1.0)(_ * _)
+
+  def length[A](as: List[A]): Int =
+    foldRight(as, 0)((_, y) => 1 + y)
+
+  def foldLeft[A,B](as: List[A], z:B)(f: (B,A) => B):B =
+    as match {
+      case Nil => z
+      case Cons(x,xs) => f(x(f), foldLeft(xs, z))
+    }
 
   val x = List(1,2,3,4,5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
