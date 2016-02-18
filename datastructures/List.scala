@@ -71,7 +71,20 @@ object List {
   def foldLeft[A,B](as: List[A], z:B)(f: (B,A) => B):B =
     as match {
       case Nil => z
-      case Cons(x,xs) => f(x(f), foldLeft(xs, z))
+      case Cons(x,xs) => foldLeft(xs, f(z, x))(f)
+    }
+
+  def sum3(ns: List[Int]) =
+    foldLeft(ns, 0)((x,y) => x + y)
+
+  def product3(ns: List[Double]) =
+    foldLeft(ns, 1.0)(_ * _)
+
+  def reverse[A](l: List[A]): List[A] =
+    l match {
+      case Nil => Nil
+      case Cons(h, Nil) => Cons(h, Nil)
+      case Cons(x, xs) => Cons(x, reverse(xs))
     }
 
   val x = List(1,2,3,4,5) match {
