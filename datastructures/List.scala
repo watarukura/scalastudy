@@ -81,11 +81,16 @@ object List {
     foldLeft(ns, 1.0)(_ * _)
 
   def reverse[A](l: List[A]): List[A] =
-    l match {
-      case Nil => Nil
-      case Cons(h, Nil) => Cons(h, Nil)
-      case Cons(x, xs) => Cons(x, reverse(xs))
-    }
+    foldLeft(l, List[A]())((acc, h) => Cons(h, acc))
+
+  def foldLeft2[A,B](l: List[A], z:B)(f: (A,B) => B):B =
+    foldLeft(reverse(l), z)((b,a) => f(a,b))
+
+  def append[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)((x, y) => Cons(x, y))
+
+  def append_foldLeft[A](a1: List[A], a2: List[A]): List[A] =
+    foldLeft(reverse(a1), a2)((x, y) => Cons(y, x))
 
   val x = List(1,2,3,4,5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
