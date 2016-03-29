@@ -92,6 +92,24 @@ object List {
   def append_foldLeft[A](a1: List[A], a2: List[A]): List[A] =
     foldLeft(reverse(a1), a2)((x, y) => Cons(y, x))
 
+  def add1(l: List[Int]): List[Int] =
+    l match {
+      case Nil => Nil
+      case Cons(h, acc) => Cons(h + 1, add1(acc))
+    }
+
+  def add1_foldRight(l: List[Int], z: List[Int]): List[Int] =
+    foldRight(l, z)((x, y) => Cons(x + 1, y))
+
+  def dbl2str(l: List[Double]): List[String] =
+    foldRight(l, Nil:List[String])((h, t) => Cons(h.toString, t))
+
+  def map[A,B](as: List[A])(f: A => B): List[B] =
+    foldRight(as, Nil:List[B])((h, t) => Cons(f(h), t))
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil:List[A])((h, t) => )
+
   val x = List(1,2,3,4,5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
     case Nil => 42
