@@ -122,6 +122,30 @@ object List {
   def filter2[A](as: List[A])(f: A => Boolean): List[A] =
     flatMap2(as)(a => if(f(a)) List(a) else Nil)
 
+  def addPairwise(as: List[Int], bs: List[Int]): List[Int] = (as, bs) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, addPairwise(t1, t2))
+  }
+
+  def zipWith[A,B,C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = (as, bs) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+  }
+
+  def startWith[A](l: List[A], prefix: List[A]): Boolean = (l, prefix) match {
+    case (_,Nil) => true
+    case (Cons(h,t), Cons(h2,t2)) if h == h2 => startWith(t,t2)
+    case _ => false
+  }
+
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = sup match {
+    case Nil => sub == Nil
+    case _ if startWith(sup, sub) => true
+    case Cons(_,t) => hasSubsequence(t,sub)
+  }
+
   val x = List(1,2,3,4,5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
     case Nil => 42
