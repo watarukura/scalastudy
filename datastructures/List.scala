@@ -153,6 +153,5 @@ object List {
     case Cons(h, t) => h + sum(t)
     case _ => 101
   }
-
 }
 
