@@ -1,4 +1,8 @@
 sealed trait Option[+A] {
+  def mean(xs: Seq[Double]): Option[Double] =
+    if (xs.isEmpty) None
+    else Some(xs.sum / xs.length)
+
   def map[B](f: A => B): Option[B] = this match {
     case None => None
     case Some(a) => Some(f(a))
@@ -24,10 +28,12 @@ sealed trait Option[+A] {
     case _ => None
   }
 
-  def variance(xs: Seq[Double]): Option[Double] = this match {
-    case None => None
-    case _ =>
-      xs.flatMap(x => Math.pow(x - xs.sum/xs.length, 2)).flatMap(x => )
+  def variance(xs: Seq[Double]): Option[Double] = {
+    mean(xs) flatMap (m => mean(xs.map(x => math.pow(x -m, 2))))
+  }
+
+  def main(args: List[Double]): Unit = {
+    println(variance(List(1,44,2,33)))
   }
 }
 
@@ -37,10 +43,6 @@ case object None extends Option[Nothing]
 
 
 object Option {
-  def mean(xs: Seq[Double]): Option[Double] =
-    if (xs.isEmpty) None
-    else Some(xs.sum / xs.length)
-
   def failingFn(i: Int): Int = {
     val y: Int = throw new Exception("fail!")
     try {
@@ -61,5 +63,6 @@ object Option {
       case e: Exception => 43
     }
   }
+
 }
 
