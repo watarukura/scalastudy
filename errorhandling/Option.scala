@@ -8,6 +8,10 @@ sealed trait Option[+A] {
     case Some(a) => Some(f(a))
   }
 
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
+    a flatMap (x => b map (y => f(x,y)))
+  }
+
   def flatMap[B](f: A => Option[B]): Option[B] = this match {
     case None => None
     case Some(a) => f(a)
